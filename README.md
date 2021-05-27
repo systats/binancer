@@ -1,24 +1,24 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# coinr
+# Binancer
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-Coinr provides access to Binance api.
+Binancer provides access to Binance api.
 
 ## Installation
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("benjaminguinaudeau/coinr")
+devtools::install_github("benjaminguinaudeau/binancer")
 ```
 
 ## How to trade
 
 ``` r
-# This provides coinr function with credentials info to place orders and retrieve order information
+# This provides binancer credentials information to place orders and retrieve order information
 register_account(
   api_key = "<your_api_key>",
   api_secret = "<your_api_secret>", 
