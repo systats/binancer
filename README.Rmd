@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-Binancer provides access to Binance api.
+Trade cryptocurrencies on binance from within R.
 
 ## Installation
 
