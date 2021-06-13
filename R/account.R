@@ -38,7 +38,8 @@ coin_assets <- function(assets = NULL){
   out <- coin_account() %>%
     dplyr::pull(balances) %>%
     .[[1]] %>%
-    dplyr::mutate(free = as.numeric(free)) %>%
+    dplyr::mutate(free = as.numeric(free),
+                  locked = as.numeric(locked)) %>%
     dplyr::filter(as.numeric(free) > 0)
 
   if(!is.null(assets)){
@@ -66,6 +67,6 @@ coin_wallets <- function(accounts){
 #' @export
 coin_value_wallets <- function(account){
   coin_wallets() %>%
-    dplyr::summarise(value = sum(value)) %>%
+    dplyr::summarise(value = sum(value) + sum(locked)) %>%
     dplyr::pull(value)
 }

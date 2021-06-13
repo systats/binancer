@@ -6,7 +6,7 @@ bi_params <- list(
 
   api_url = glue::glue('https://api.binance.{tld}/api'),
   withraw_api_url = glue::glue('https://api.binance.{tld}/wapi'),
-  margin_api_url = glue::glue('https://api.binance.{}/sapi'),
+  margin_api_url = glue::glue('https://api.binance.{tld}/sapi'),
   website_url = glue::glue('https://www.binance.{tld}'),
   futures_url = glue::glue('https://fapi.binance.{tld}/fapi'),
   public_api_version = 'v1',
