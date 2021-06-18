@@ -59,6 +59,7 @@ coin_wallets <- function(accounts){
   coinr::coin_assets() %>%
     dplyr::mutate(symbol = paste0(asset, "USDT")) %>%
     dplyr::left_join(prices, "symbol") %>%
+    dplyr::filter(!is.na(price)) %>%
     dplyr::mutate(value = free * price) %>%
     dplyr::select(-symbol)
 
