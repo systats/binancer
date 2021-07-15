@@ -28,7 +28,7 @@ coin_prices <- function(symbol = NULL){
 
   if(!is.null(symbol)){
     out <- out %>%
-      dplyr::filter(stringr::str_detect(symbol, !!symbol))
+      dplyr::filter(stringr::str_detect(symbol, paste0("^", !!symbol, "$")))
   }
 
   return(out)
