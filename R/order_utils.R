@@ -1,12 +1,12 @@
 
 
 #' @export
-check_market <- function(.tbl, verbose = T){
+check_market <- function(.tbl, symbols = symbols, verbose = T){
 
   out <- .tbl %>%
     dplyr::mutate(currency = dplyr::case_when(
-      paste0(giving, taking) %in% symbols$symbol ~ paste0(giving, taking),
-      paste0(taking, giving) %in% symbols$symbol ~ paste0(taking, giving),
+      paste0(giving, taking) %in% symbols ~ paste0(giving, taking),
+      paste0(taking, giving) %in% symbols ~ paste0(taking, giving),
       T ~ NA_character_
     ),
     reverse = stringr::str_detect(currency, paste0("^", giving)),

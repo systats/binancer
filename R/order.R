@@ -55,7 +55,7 @@ coin_trade <- function(exchanges_all, taking, giving, taking_qt = NULL, giving_q
   if(is.null(giving_qt)) out <- tibble::tibble(taking = taking, giving = giving, taking_qt = taking_qt)
 
   order <- out %>%
-    check_market(verbose = verbose) %>%
+    check_market(verbose = verbose, symbols = exchanges_all$symbol) %>%
     add_price_currency(verbose = verbose) %>%
     shape_quantities(verbose = verbose) %>%
     correc_quantity(exchanges_all, verbose = verbose)  %>%
