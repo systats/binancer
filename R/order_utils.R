@@ -33,11 +33,12 @@ check_market <- function(.tbl, symbols = symbols, verbose = T){
 #' @export
 add_price_currency <- function(.tbl, verbose = T){
 
-  out <- .tbl %>%
-    dplyr::mutate(price = currency %>%
-                    coin_prices %>%
-                    .$price %>%
-                    as.numeric)
+  price <- coin_book_ticker(symbol = .tbl$currency)
+  if(.tbl$reverse){
+    out <- .tbl %>% dplyr::mutate(price =  as.numeric(price$bid_price))
+  } else {
+    out <- .tbl %>% dplyr::mutate(price =  as.numeric(price$ask_price))
+  }
 
   if(verbose){
     if(out$reverse){
@@ -104,9 +105,9 @@ correc_quantity <- function(.tbl,  exchanges_all, verbose = T){
   if(out$final_quantity != out$taking_qt){
     if(verbose){
       if(out$reverse){
-      cli::cli_alert_info(glue::glue("Corrected quantities: receiving {out$final_quantity*out$price} {out$taking} for {out$final_quantity} {out$giving}"))
+        cli::cli_alert_info(glue::glue("Corrected quantities: receiving {out$final_quantity*out$price} {out$taking} for {out$final_quantity} {out$giving}"))
       } else {
-      cli::cli_alert_info(glue::glue("Corrected quantities: giving {out$final_quantity*out$price} {out$giving} for {out$final_quantity} {out$taking}"))
+        cli::cli_alert_info(glue::glue("Corrected quantities: giving {out$final_quantity*out$price} {out$giving} for {out$final_quantity} {out$taking}"))
       }
     }
   }
