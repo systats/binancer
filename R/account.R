@@ -53,14 +53,14 @@ coin_assets <- function(assets = NULL){
 #' @export
 coin_wallets <- function(accounts){
 
-  prices <- coinr::coin_prices() %>%
+  prices <- coin_prices() %>%
     dplyr::bind_rows(tibble::tibble(symbol = "USDTUSDT", price = 1))
 
-  coinr::coin_assets() %>%
+  coin_assets() %>%
     dplyr::mutate(symbol = paste0(asset, "USDT")) %>%
     dplyr::left_join(prices, "symbol") %>%
     dplyr::filter(!is.na(price)) %>%
-    dplyr::mutate(value = free * price) %>%
+    dplyr::mutate(value = free * price + locked * price) %>%
     dplyr::select(-symbol)
 
 }
@@ -68,6 +68,6 @@ coin_wallets <- function(accounts){
 #' @export
 coin_value_wallets <- function(account){
   coin_wallets() %>%
-    dplyr::summarise(value = sum(value) + sum(locked)) %>%
+    dplyr::summarise(value = sum(value)) %>%
     dplyr::pull(value)
 }

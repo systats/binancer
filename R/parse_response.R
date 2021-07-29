@@ -25,10 +25,10 @@ parse_symbols <- function(.x){
 parse_exchange_info <- function(ex, symbol = NULL){
 
   if(is.null(symbol)){
-    rt <- tibble::tibble(symbols = list(ex$symbols %>% furrr::future_map_dfr(coinr::parse_symbols, .progress = T)))
+    rt <- tibble::tibble(symbols = list(ex$symbols %>% furrr::future_map_dfr(parse_symbols, .progress = T)))
   } else {
     rt <- tibble::tibble(symbols = list(ex$symbols %>% purrr::map_dfr(~{
-      if(stringr::str_detect(.x$symbol, symbol)) coinr::parse_symbols(.x) else tibble::tibble()
+      if(stringr::str_detect(.x$symbol, symbol)) parse_symbols(.x) else tibble::tibble()
     })))
   }
 
