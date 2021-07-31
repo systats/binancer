@@ -48,7 +48,37 @@ create_order <- function(.tbl,
 }
 
 #' @export
+coin_ftrade <- function(taking, giving, taking_qt = NULL, giving_qt = NULL, symbols = symbols()$symbol){
 
+  market <- paste0(taking, giving)
+  rev <- market %in% symbols
+  if(!rev) market <- paste0(giving, taking)
+
+  data <- list(
+    symbol = market,
+    side = if(rev) "SELL" else "BUY",
+    type = "MARKET"
+  )
+
+  if(rev){
+    if(is.null(giving_qt)){
+      data$quoteOrderQty <- taking_qt
+    } else {
+      data$quantity <- giving_qt
+    }
+  } else {
+    if(is.null(giving_qt)){
+      data$quantity <- taking_qt
+    } else {
+      data$quoteOrderQty <- giving_qt
+    }
+  }
+
+  bi_post(path = "order", signed = T, data = data)
+
+}
+
+#' @export
 coin_trade <- function(exchanges_all, taking, giving, taking_qt = NULL, giving_qt = NULL, test = T, verbose = F){
 
   if(is.null(taking_qt)) out <- tibble::tibble(taking = taking, giving = giving, giving_qt = giving_qt)
