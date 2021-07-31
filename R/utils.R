@@ -51,6 +51,9 @@ check_symbol <- function(symbol, limit = NULL, required = T){
     if(required & is.null(symbol)){
         stop("Symbol must be specified")
     }
+    if(symbol == "COSUSDT"){
+        symbol <- "^COSUSDT"
+    }
 
     if(!symbol %in% symbols()){
         update_symbols()
