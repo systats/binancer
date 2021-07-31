@@ -36,13 +36,27 @@ order_params <- function(data){
 }
 
 #' @export
+symbols <- function(){
+    readr::read_rds(system.file("symbols.rds", package = "binancer"))
+}
+
+#' @export
+update_symbols <- function(){
+    readr::write_rds(coin_prices()[,"symbol"], system.file("symbols.rds", package = "binancer"))
+}
+
+#' @export
 check_symbol <- function(symbol, limit = NULL, required = T){
 
     if(required & is.null(symbol)){
         stop("Symbol must be specified")
     }
 
-    symbols %>%
+    if(!symbol %in% symbols()){
+        update_symbols()
+    }
+
+    symbols() %>%
         dplyr::filter(stringr::str_detect(symbol, !!symbol)) %>%
         dplyr::select(symbol) %>%
         dplyr::mutate(limit = !!limit) %>%

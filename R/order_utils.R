@@ -1,7 +1,7 @@
 
 
 #' @export
-check_market <- function(.tbl, symbols = symbols, verbose = T){
+check_market <- function(.tbl, symbols = symbols(), verbose = T){
 
   out <- .tbl %>%
     dplyr::mutate(currency = dplyr::case_when(
