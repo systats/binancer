@@ -62,15 +62,19 @@ coin_ftrade <- function(taking, giving, taking_qt = NULL, giving_qt = NULL, symb
 
   if(rev){
     if(is.null(giving_qt)){
-      data$quoteOrderQty <- taking_qt
+      # print(1)
+      data$quantity <- taking_qt
     } else {
-      data$quantity <- giving_qt
+      # print(2)
+      data$quoteOrderQty <- giving_qt
     }
   } else {
     if(is.null(giving_qt)){
-      data$quantity <- taking_qt
+      # print(3)
+      data$quoteOrderQty <- taking_qt
     } else {
-      data$quoteOrderQty <- giving_qt
+      # print(4)
+      data$quantity <- giving_qt
     }
   }
 
