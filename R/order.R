@@ -64,7 +64,7 @@ coin_ftrade <- function(exchanges_all, taking, giving, taking_qt = NULL, giving_
     if(is.null(giving_qt)){
       # print(1)
       lot_size <- as.numeric(dplyr::filter(exchanges_all, symbol == market)[["lot_siz_estep_size"]])
-      data$quantity <- lot_size* (taking_qt %/% lot_size)
+      data$quantity <- lot_size * floor(as.numeric(as.character(taking_qt / lot_size)))
     } else {
       # print(2)
       data$quoteOrderQty <- giving_qt
@@ -76,7 +76,7 @@ coin_ftrade <- function(exchanges_all, taking, giving, taking_qt = NULL, giving_
     } else {
       # print(4)
       lot_size <- as.numeric(dplyr::filter(exchanges_all, symbol == market)[["lot_siz_estep_size"]])
-      data$quantity <- lot_size* (taking_qt %/% lot_size)
+      data$quantity <- lot_size * floor(as.numeric(as.character(giving_qt / lot_size)))
     }
   }
 
