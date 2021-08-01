@@ -56,7 +56,7 @@ coin_ftrade <- function(taking, giving, taking_qt = NULL, giving_qt = NULL, symb
 
   data <- list(
     symbol = market,
-    side = if(rev) "SELL" else "BUY",
+    side = if(rev) "BUY" else "SELL",
     type = "MARKET"
   )
 
