@@ -48,7 +48,7 @@ create_order <- function(.tbl,
 }
 
 #' @export
-coin_ftrade <- function(taking, giving, taking_qt = NULL, giving_qt = NULL, symbols = symbols()$symbol){
+coin_ftrade <- function(exchanges_all, taking, giving, taking_qt = NULL, giving_qt = NULL, symbols = symbols()$symbol){
 
   market <- paste0(taking, giving)
   rev <- market %in% symbols
@@ -63,7 +63,8 @@ coin_ftrade <- function(taking, giving, taking_qt = NULL, giving_qt = NULL, symb
   if(rev){
     if(is.null(giving_qt)){
       # print(1)
-      data$quantity <- taking_qt
+      lot_size <- as.numeric(dplyr::filter(exchanges_all, symbol == market)[["lot_siz_estep_size"]])
+      data$quantity <- lot_size* (taking_qt %/% lot_size)
     } else {
       # print(2)
       data$quoteOrderQty <- giving_qt
@@ -74,7 +75,8 @@ coin_ftrade <- function(taking, giving, taking_qt = NULL, giving_qt = NULL, symb
       data$quoteOrderQty <- taking_qt
     } else {
       # print(4)
-      data$quantity <- giving_qt
+      lot_size <- as.numeric(dplyr::filter(exchanges_all, symbol == market)[["lot_siz_estep_size"]])
+      data$quantity <- lot_size* (taking_qt %/% lot_size)
     }
   }
 
