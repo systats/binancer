@@ -1,4 +1,19 @@
 #' @export
+post_request_fast <- function(path, data){
+
+  url <- paste(bi_params$api_url, bi_params$private_api_version, path, sep = "/")
+
+  data$timestamp <- round(as.numeric(lubridate::now("UTC"))*1000)
+  data$signature <- generate_signature(data = data)
+
+  res <- httr::POST(url,
+                    httr::add_headers(.headers = account_headers()),
+                    body = order_params(data), encode = "form") %>%
+    httr::content()
+  return(res)
+}
+
+#' @export
 bi_request <- function(url, method, signed, force_params = FALSE, requests_params = NULL, ...){
   timeout <- 10
 

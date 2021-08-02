@@ -48,7 +48,7 @@ create_order <- function(.tbl,
 }
 
 #' @export
-coin_ftrade <- function(exchanges_all, taking, giving, taking_qt = NULL, giving_qt = NULL, symbols = symbols()$symbol){
+coin_ftrade <- function(exchanges_all = NULL, lot_size = NULL, taking, giving, taking_qt = NULL, giving_qt = NULL, symbols = symbols()$symbol){
 
   market <- paste0(taking, giving)
   rev <- market %in% symbols
@@ -63,7 +63,9 @@ coin_ftrade <- function(exchanges_all, taking, giving, taking_qt = NULL, giving_
   if(rev){
     if(is.null(giving_qt)){
       # print(1)
-      lot_size <- as.numeric(dplyr::filter(exchanges_all, symbol == market)[["lot_siz_estep_size"]])
+      if(is.null(lot_size)){
+        lot_size <- as.numeric(dplyr::filter(exchanges_all, symbol == market)[["lot_siz_estep_size"]])
+      }
       data$quantity <- lot_size * floor(as.numeric(as.character(taking_qt / lot_size)))
     } else {
       # print(2)
@@ -75,12 +77,14 @@ coin_ftrade <- function(exchanges_all, taking, giving, taking_qt = NULL, giving_
       data$quoteOrderQty <- taking_qt
     } else {
       # print(4)
-      lot_size <- as.numeric(dplyr::filter(exchanges_all, symbol == market)[["lot_siz_estep_size"]])
+      if(is.null(lot_size)){
+        lot_size <- as.numeric(dplyr::filter(exchanges_all, symbol == market)[["lot_siz_estep_size"]])
+      }
       data$quantity <- lot_size * floor(as.numeric(as.character(giving_qt / lot_size)))
     }
   }
 
-  bi_post(path = "order", signed = T, data = data)
+  post_request_fast(path = "order", data = data)
 
 }
 
