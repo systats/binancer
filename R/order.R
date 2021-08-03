@@ -48,8 +48,13 @@ create_order <- function(.tbl,
 }
 
 #' @export
-coin_ftrade <- function(exchanges_all = NULL, lot_size = NULL, taking, giving, taking_qt = NULL, giving_qt = NULL, symbols = symbols()$symbol){
+coin_ftrade <- function(exchanges_all = NULL, lot_size = NULL, taking, giving, taking_qt = NULL, giving_qt = NULL,
+                        symbols = NULL,
+                        limit_price = NULL){
 
+  if(is.null(symbols)) symbols <- symbols()$symbol
+
+  # tictoc::tic()
   market <- paste0(taking, giving)
   rev <- market %in% symbols
   if(!rev) market <- paste0(giving, taking)
@@ -57,8 +62,11 @@ coin_ftrade <- function(exchanges_all = NULL, lot_size = NULL, taking, giving, t
   data <- list(
     symbol = market,
     side = if(rev) "BUY" else "SELL",
-    type = "MARKET"
+    type = if(is.null(limit_price)) "MARKET" else "LIMIT"
   )
+  # tictoc::toc()
+  # tictoc::tic()
+
 
   if(rev){
     if(is.null(giving_qt)){
@@ -84,7 +92,25 @@ coin_ftrade <- function(exchanges_all = NULL, lot_size = NULL, taking, giving, t
     }
   }
 
+  # tictoc::toc()
+  # tictoc::tic()
+
+  if(!is.null(limit_price)){
+    data$timeInForce <- "GTC"
+    data$price <- round(limit_price, 8)
+    if(rlang::has_name(data, "quoteOrderQty")){
+      if(is.null(lot_size)){
+        lot_size <- as.numeric(dplyr::filter(exchanges_all, symbol == market)[["lot_siz_estep_size"]])
+      }
+      data$quantity <- lot_size * floor(as.numeric(as.character(data$quoteOrderQty / limit_price / lot_size)))
+      data$quoteOrderQty <- NULL
+    }
+  }
+
+  # tictoc::toc()
+  # tictoc::tic()
   post_request_fast(path = "order", data = data)
+  # tictoc::toc()
 
 }
 
@@ -99,7 +125,7 @@ coin_trade <- function(exchanges_all, taking, giving, taking_qt = NULL, giving_q
     add_price_currency(verbose = verbose) %>%
     shape_quantities(verbose = verbose) %>%
     correc_quantity(exchanges_all, verbose = verbose)  %>%
-    dplyr::mutate(order_type = "MARKET")
+    dplyr::mutate(order_type = "Market")
 
   if(verbose) dplyr::glimpse(order)
 

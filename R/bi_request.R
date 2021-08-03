@@ -1,16 +1,22 @@
 #' @export
 post_request_fast <- function(path, data){
 
+  # tictoc::tic()
   url <- paste(bi_params$api_url, bi_params$private_api_version, path, sep = "/")
-
+  # tictoc::toc()
+  # tictoc::tic()
   data$timestamp <- round(as.numeric(lubridate::now("UTC"))*1000)
   data$signature <- generate_signature(data = data)
-
-  res <- httr::POST(url,
-                    httr::add_headers(.headers = account_headers()),
-                    body = order_params(data), encode = "form") %>%
-    httr::content()
-  return(res)
+  par <- order_params(data)
+  # tictoc::toc()
+  # tictoc::tic()
+  req <- httr::POST(url,
+                    httr::add_headers(.headers = c(accept = "application/json",
+                                                   `User-Agent` = 'binance/python',
+                                                   `X-MBX-APIKEY` = api_key())),
+                    body = par, encode = "form")
+  jsonlite::fromJSON(rawToChar(req$content))
+  # tictoc::toc()
 }
 
 #' @export
