@@ -125,7 +125,7 @@ coin_trade <- function(exchanges_all, taking, giving, taking_qt = NULL, giving_q
     add_price_currency(verbose = verbose) %>%
     shape_quantities(verbose = verbose) %>%
     correc_quantity(exchanges_all, verbose = verbose)  %>%
-    dplyr::mutate(order_type = "Market")
+    dplyr::mutate(order_type = "MARKET")
 
   if(verbose) dplyr::glimpse(order)
 
